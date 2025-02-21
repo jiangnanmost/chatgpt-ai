@@ -1,5 +1,10 @@
 package cn.jiangna.chatbot.api.test;
 
+import cn.jiangnan.chatbot.api.domain.bibili.aggregate.UnreplyMessage;
+import cn.jiangnan.chatbot.api.domain.bibili.res.Data;
+import cn.jiangnan.chatbot.api.domain.bibili.vo.Item;
+import cn.jiangnan.chatbot.api.domain.bibili.vo.ReplyItem;
+import cn.jiangnan.chatbot.api.domain.service.biapi;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -10,12 +15,16 @@ import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 单元测试
  */
+
 public class Apitest {
         @Test
         public void query_reply() throws IOException, ParseException {
@@ -49,6 +58,24 @@ public class Apitest {
             else{
                 System.out.println(response.getCode());
             }
+        }
+
+        @Test
+        public void test_biapi_message () throws IOException {
+            biapi tp = new biapi();
+            String cookie ="buvid_fp_plain=undefined; buvid4=285B8A16-C4A5-F053-954C-E782AEA8C3B763501-022021112-nVDPmcrgLsoCSaWUmu%2FRtQ%3D%3D; header_theme_version=CLOSE; DedeUserID=1712020266; DedeUserID__ckMd5=63f7fc7a3ce1a952; enable_web_push=DISABLE; FEED_LIVE_VERSION=V_WATCHLATER_PIP_WINDOW3; buvid3=4231A3BD-35FF-C0D4-017F-5FDE9ABF14B594729infoc; b_nut=1725029794; _uuid=7876CBE6-2CE9-B188-10BB9-6249E51EC33438842infoc; rpdid=0zbfAHMIiT|2Z9DfsuP|4EO|3w1TCpVa; enable_feed_channel=DISABLE; LIVE_BUVID=AUTO7317380753985954; PVID=1; home_feed_column=5; browser_resolution=1528-738; CURRENT_QUALITY=80; is-2022-channel=1; fingerprint=eb3f34a89e5a0f71584ed1f050bc393d; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDAyNzY4MzksImlhdCI6MTc0MDAxNzU3OSwicGx0IjotMX0.ETQK6a_LyxhWjoDtvQurAy3w8tsIm0dEhkXKA1wj08o; bili_ticket_expires=1740276779; SESSDATA=5c7b4d87%2C1755569641%2C8af99%2A22CjAbzgelYQly4CLqJ8zrIRPfpkcAo4gIQBqdBU3VLVvoakeN2mv1Of6CuDDBIQMRZ0QSVlhYMlU5WDFhdWVBemZPd2pQbHRBOWFWSFExcXJUTXRPdGhSVU4tT2k2SktJNnFkYlNxNVJEeXVIXzZ0MHRpclhScWFQWXZfRlY2d1ZoZnBVVFgxM01nIIEC; bili_jct=07fa9cc046328d52130ee9df39c7963a; CURRENT_FNVAL=4048; b_lsid=AC38A2102_195224D34F0; sid=qetxzdh5; buvid_fp=4231A3BD-35FF-C0D4-017F-5FDE9ABF14B594729infoc; bp_t_offset_1712020266=1035942323634044928";
+            UnreplyMessage response = tp.replyMessage(cookie);
+            Data data = response.getData();
+            List<ReplyItem> items = data.getItems();
+            for (ReplyItem it : items) {
+                Item tep = it.getItem();
+                String sourceContent = tep.getSourceContent();
+                long subjectId = tep.getSubjectId();
+                long sourceId = tep.getSourceId();
+                String message = "122344234111";
+                tp.ReplyMessage(cookie,subjectId,message,sourceId);
+            }
+            //subject_id == oid--type默认为1--mes=“url”--source_id"==root==parent
 
         }
 }
